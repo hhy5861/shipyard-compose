@@ -1,0 +1,5 @@
+shipyard-swarm-agent:
+    container_name: shipyard-swarm-agent
+    image: swarm:latest
+    restart: always
+    command: join --addr tcp://0.0.0.0:3375 etcd://0.0.0.0:4001
