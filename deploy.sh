@@ -129,7 +129,7 @@ start_discovery() {
         -p 7001:7001 \
         --restart=always \
         --name $PREFIX-discovery \
-        microbox/etcd:latest -addr $SHIPYARD_IP:$DISCOVERY_PORT -peer-addr $SHIPYARD_IP:$DISCOVERY_PEER_PORT)
+        hub.docker.91syt.com/etcd:latest -addr $SHIPYARD_IP:$DISCOVERY_PORT -peer-addr $SHIPYARD_IP:$DISCOVERY_PEER_PORT)
 }
 
 remove_discovery() {
@@ -142,7 +142,8 @@ start_rethinkdb() {
         -d \
         --restart=always \
         --name $PREFIX-rethinkdb \
-        rethinkdb)
+        -v /data/rethinkdb:/data \
+        hub.docker.91syt.com/rethinkdb:latest)
 }
 
 remove_rethinkdb() {
@@ -169,7 +170,7 @@ start_proxy() {
         -v /var/run/docker.sock:/var/run/docker.sock \
         -e PORT=$PROXY_PORT \
         --volumes-from=$PREFIX-certs $TLS_OPTS\
-        ehazlett/docker-proxy:latest)
+        hub.docker.91syt.com/docker-proxy:latest)
 }
 
 remove_proxy() {
@@ -196,7 +197,7 @@ start_swarm_manager() {
         --restart=always \
         --name $PREFIX-swarm-manager \
         --volumes-from=$PREFIX-certs $EXTRA_RUN_OPTS \
-        swarm:latest \
+        hub.docker.91syt.com/swarm:latest \
         m --replication --addr $SHIPYARD_IP:$SWARM_PORT --host tcp://0.0.0.0:$SWARM_PORT $TLS_OPTS $DISCOVERY)
 }
 
@@ -216,7 +217,7 @@ start_swarm_agent() {
         -d \
         --restart=always \
         --name $PREFIX-swarm-agent $EXTRA_RUN_OPTS \
-        swarm:latest \
+        hub.docker.91syt.com/swarm:latest \
         j --addr $SHIPYARD_IP:$PROXY_PORT $DISCOVERY)
 }
 
